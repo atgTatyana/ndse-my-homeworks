@@ -1,0 +1,20 @@
+{
+  "name": "002-console",
+  "version": "1.0.0",
+  "description": "1.2 Аргументы командной строки и console",
+  "main": "date.js",
+  "bin": {
+    "current": "./date.js",
+    "add": "./date-add.js",
+    "sub": "./date-sub.js",
+    "number": "./task2.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
+}
