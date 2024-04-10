@@ -4,9 +4,7 @@
   "description": "1.2 Аргументы командной строки и console",
   "main": "date.js",
   "bin": {
-    "current": "./date.js",
-    "add": "./date-add.js",
-    "sub": "./date-sub.js",
+    "date-time": "./date.js",
     "number": "./task2.js"
   },
   "scripts": {
