@@ -30,20 +30,6 @@ router.get('/', (req, res) => {
     books: library,
   })
 })
-  
-router.get('/:id', (req, res) => {    // получение книги по её идентификатору
-  const {id} = req.params
-  const idx = library.findIndex(el => el.id === id)
-  
-  if (idx === -1) {
-    res.redirect('/404')
-  }
-
-  res.render("books/view", {
-    title: "Book | view",
-    book: library[idx],
-  })  
-})
 
 router.get('/create', (req, res) => {   // вывод пустой формы для создания новой книги
   res.render("books/create", {
@@ -60,6 +46,22 @@ router.post('/create', (req, res) => {      // создание новой кн�
 
   res.redirect('/books')
 })
+  
+router.get('/:id', (req, res) => {    // получение книги по её идентификатору
+  const {id} = req.params
+  const idx = library.findIndex(el => el.id === id)
+  
+  if (idx === -1) {
+    res.redirect('/404')
+
+  } else {
+    res.render("books/view", {
+      title: "Book | view",
+      book: library[idx],
+    }) 
+  }
+})
+
 
 router.get('/update/:id', (req, res) => {   // вывод формы редактирования книги по идентификатору
   const {id} = req.params
@@ -67,12 +69,13 @@ router.get('/update/:id', (req, res) => {   // вывод формы редак�
 
   if (idx === -1) {
     res.redirect('/404')
-  } 
 
-  res.render("books/update", {
-    title: "Book | update",
-    book: library[idx],
-  })
+  } else {
+    res.render("books/update", {
+      title: "Book | update",
+      book: library[idx],
+    })
+  }
 })
 
 router.post('/update/:id', (req, res) => {      // обновляем книгу после редактирования
@@ -83,19 +86,20 @@ router.post('/update/:id', (req, res) => {      // обновляем книгу
 
   if (idx === -1) {
     res.redirect('/404')
-  } 
 
-  library[idx] = {
-    ...library[idx],
-    title,
-    description,
-    authors,
-    favorite,
-    fileCover,
-    fileName,
-    fileBook,
+  } else {
+    library[idx] = {
+      ...library[idx],
+      title,
+      description,
+      authors,
+      favorite,
+      fileCover,
+      fileName,
+      fileBook,
+    }
+    res.redirect(`/books/${id}`)
   }
-  res.redirect(`/books/${id}`)
 })
 
 router.post('/delete/:id', (req, res) => {      // удаление книги по идентификатору
@@ -104,10 +108,11 @@ router.post('/delete/:id', (req, res) => {      // удаление книги �
 
   if (idx === -1) {
     res.redirect('/404')
-  } 
-
-  library.splice(idx, 1)
-  res.redirect(`/books`)
+    
+  } else {
+    library.splice(idx, 1)
+    res.redirect(`/books`)
+  }
 })
   
 module.exports = router
