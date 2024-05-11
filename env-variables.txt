@@ -1,0 +1,54 @@
+PS C:\NodeProjets\docker-first> docker pull node:20.10
+20.10: Pulling from library/node
+bc0734b949dc: Pull complete
+b5de22c0f5cd: Pull complete
+917ee5330e73: Pull complete
+b43bd898d5fb: Pull complete
+9b5852c9e7e7: Pull complete
+ffce7831deb3: Pull complete
+4360a670e724: Pull complete
+657e9acbc9b4: Pull complete
+Digest: sha256:8d0f16fe841577f9317ab49011c6d819e1fa81f8d4af7ece7ae0ac815e07ac84
+Status: Downloaded newer image for node:20.10
+docker.io/library/node:20.10
+
+What's Next?
+  View a summary of image vulnerabilities and recommendations → docker scout quickview node:20.10
+PS C:\NodeProjets\docker-first> docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+alpine       latest    05455a08881e   3 months ago   7.38MB
+node         20.10     67d9cdb16016   4 months ago   1.1GB
+PS C:\NodeProjets\docker-first> docker run --name mynode -it -e NAME=Tanya -e SURNAME=Amosova node:20.10
+Welcome to Node.js v20.10.0.
+Type ".help" for more information.
+> console.log(`Привет, ${process.env.NAME} ${process.env.SURNAME}!`)
+Привет, Tanya Amosova!
+undefined
+>
+PS C:\NodeProjets\docker-first> docker ps             
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+PS C:\NodeProjets\docker-first> docker ps -a
+CONTAINER ID   IMAGE        COMMAND                  CREATED         STATUS                      PORTS     NAMES
+3a853583f6a6   node:20.10   "docker-entrypoint.s…"   5 minutes ago   Exited (0) 46 seconds ago             mynode
+PS C:\NodeProjets\docker-first> docker rmi node:20.10 
+Error response from daemon: conflict: unable to remove repository reference "node:20.10" (must force) - container 3a853583f6a6 is using its referenced image 67d9cdb16016
+PS C:\NodeProjets\docker-first> docker rm mynode      
+mynode
+PS C:\NodeProjets\docker-first> docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+PS C:\NodeProjets\docker-first> docker rmi node:20.10
+Untagged: node:20.10
+Untagged: node@sha256:8d0f16fe841577f9317ab49011c6d819e1fa81f8d4af7ece7ae0ac815e07ac84
+Deleted: sha256:67d9cdb160166226de55337f6b14c44d576cf14f10cd0fb9fbd7854b04dad8ba
+Deleted: sha256:f74e49f436afb9c8e5c6497cb3b1a423b58d2afa4367abb632f9804dc0bcacdf
+Deleted: sha256:55f845530c6cbe0cb4e8b2fbbb5722826dab4681a3627c7f73c104d9a62ccfc5
+Deleted: sha256:00fbfcf84f756c96cde6b48edda29b1346612591c0d706ed2cd24b4788b43f47
+Deleted: sha256:2fc9308eaf9d6ffbaaa664ea2862ea550640e587a98584199589fc122b817d31
+Deleted: sha256:5d56f3849a5a5c75817479f9824c9769071443821c6f840f437bd5b06d2d362c
+Deleted: sha256:1480c0bdd0fdaf4a3554efe78d85b5a25e26a3e782f887602e7af7ef7230fb76
+Deleted: sha256:f6840d780fd90d348995d50d33a0e1aed6d23076ae7b850aa19ea7ef707d2200
+Deleted: sha256:ae134c61b154341a1dd932bd88cb44e805837508284e5d60ead8e94519eb339f
+PS C:\NodeProjets\docker-first> docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+alpine       latest    05455a08881e   3 months ago   7.38MB
+PS C:\NodeProjets\docker-first>
