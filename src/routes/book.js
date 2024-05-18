@@ -1,5 +1,6 @@
 const express = require('express')
 const { v4: uuid } = require('uuid')
+// const http = require('http')
 
 const router = express.Router()
 
@@ -12,6 +13,7 @@ class Book {
     this.fileCover = fileCover,
     this.fileName = fileName,
     this.fileBook = fileBook,
+    this.counter = 0,
     this.id = id
   }
 }
@@ -20,7 +22,7 @@ const library = [];
 
 [1, 2, 3].map(el => {
   const newBook = new Book(`book ${el}`, `desc ${el}`, `authors ${el}`, `favorite ${el}`,
-    `fileCover ${el}`, `fileName ${el}`, `fileBook ${el}`)
+    `fileCover ${el}`, `fileName ${el}`, `fileBook ${el}`, `id-${el}`)
   library.push(newBook)
 })
   
@@ -55,13 +57,48 @@ router.get('/:id', (req, res) => {    // получение книги по её
     res.redirect('/404')
 
   } else {
-    res.render("books/view", {
-      title: "Book | view",
-      book: library[idx],
-    }) 
+    fetch(`http://counter:3002/counter/:${id}/incr`, {
+      method: 'POST',
+      body: JSON.stringify(id),
+      
+    }).then(() => {
+      fetch(`http://counter:3002/counter/:${id}`)
+        .then((response) => {
+          return response.json()
+
+        }).then((counter) =>{
+          const idx = library.findIndex(el => el.id === id)
+          library[idx].counter = counter
+
+          res.render("books/view", {
+            title: "Book | view",
+            book: library[idx],
+          }) 
+        })
+    })
+
+    // http.get(`http://counter:3002/counter/:${id}`, (res) => {
+    //   const {statusCode} = res
+    //   if (statusCode !== 200) {
+    //     console.log(`statusCode: ${statusCode}`)
+    //     return
+    //   }
+    
+    //   res.setEncoding('utf8')
+    //   let rowData = ''
+    //   res.on('data', (chunk) => rowData += chunk)
+    //   res.on('end', () => { 
+    //     const counter = JSON.parse(rowData)
+    //     console.log(counter)
+  
+    //     const idx = library.findIndex(el => el.id === id)
+    //     library[idx].counter = counter
+    //   })
+    // }).on('error', (err) => { 
+    //   console.error(err)
+    // })
   }
 })
-
 
 router.get('/update/:id', (req, res) => {   // вывод формы редактирования книги по идентификатору
   const {id} = req.params

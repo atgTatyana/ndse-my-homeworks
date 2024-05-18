@@ -13,4 +13,6 @@ app.use('/books', booksRouter)
 app.use(errorMiddleware)    // если роуты '/' и '/books' не сработали
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT)
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}.`)
+})

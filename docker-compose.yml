@@ -1,0 +1,20 @@
+services:
+  storage:
+    image: redis
+    volumes:
+      - ./counter/data:/data
+  counter:
+    image: atgatg/books:counter
+    environment:
+      - PORT=3002
+      - REDIS_URL=redis://storage
+    ports:
+      - 81:3002
+    depends_on:
+      - storage
+  books:
+    image: atgatg/books:v2.0.0
+    ports:
+      - 80:3000
+    depends_on:
+      - counter
