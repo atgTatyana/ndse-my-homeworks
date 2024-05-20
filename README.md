@@ -1,6 +1,6 @@
 #### запрос(ы) для вставки данных минимум о двух книгах в коллекцию books
 
-```json
+```
 db.books.insertMany(
     {
         title: "Доктор Живаго",
@@ -17,14 +17,14 @@ db.books.insertMany(
 
 #### запрос для поиска полей документов коллекции books по полю title
 
-```json
+```
 db.books.find({ title: "Мастер и Маргарита" })
 
 ```
 
 #### запрос для редактирования полей: description и authors коллекции books по _id записи
 
-```json
+```
 db.books.updateOne(
     { _id: 1 },
     { $set: { description: "new description", authors: "new authors" }}
