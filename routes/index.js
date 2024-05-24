@@ -1,113 +1,77 @@
 const express = require('express')
-const { v4: uuid } = require('uuid')
-const fileMulter = require('../middleware/file')
+const Books = require('../models/books')
 
 const router = express.Router()
 
-class Book {
-  constructor(title, description, authors, favorite, fileCover, fileName, fileBook, id = uuid()) {
-    this.title = title,
-    this.description = description,
-    this.authors = authors,
-    this.favorite = favorite,
-    this.fileCover = fileCover,
-    this.fileName = fileName,
-    this.fileBook = fileBook,
-    this.id = id
-  }
-}
 
-const library = []
-
-router.post('/user/login', (req, res) => {
-  res.status(201)
-  res.json({ id: 1, mail: "test@mail.ru" })
-})
-  
-router.get('/books', (req, res) => {
-  res.json(library) 
-})
-  
-router.get('/books/:id', (req, res) => {
-  const {id} = req.params
-  const idx = library.findIndex(el => el.id === id)
-  
-  if( idx !== -1) {
-    res.json(library[idx])
-  } else {
-    res.status(404)
-    res.json('404 | книга не найдена')
+router.get('/', async (req, res) => {     // получить все записи
+  try {
+    const books = await Books.find().select('-__v')
+    res.json(books)
+  } catch (e) {
+    res.status(500).json(e)
   }
 })
-
-router.get('/books/:id/download', (req, res) => {
+  
+router.get('/:id', async (req, res) => {    // получение единственной записи по id
   const {id} = req.params
-  const idx = library.findIndex(el => el.id === id)
-
-  if( idx !== -1) {
-    res.download(__dirname+'/../fileBook/'+library[idx].fileBook, (err) => {
-      if (err){
-        res.status(404)
-      }
-    })
-  } else {
-    res.status(404)
-    res.json('404 | книга не найдена')
-  } 
-})  
   
-router.post('/books',
-  fileMulter.single('file-book'),
-  (req, res) => {
-    const {title, description, authors, favorite, fileCover, fileName, fileBook} = req.body
-    const newBook = new Book(title, description, authors, favorite, fileCover, fileName, fileBook)
-    library.push(newBook)
-  
-    res.status(201)
-    res.json(newBook)
-  })
-  
-router.put('/books/:id',
-  fileMulter.single('file-book'),
-  (req, res) => {
-    const {title, description, authors, favorite, fileCover, fileName, fileBook} = req.body
-    const {id} = req.params
-    const idx = library.findIndex(el => el.id === id)
-  
-    if (idx !== -1){
-      library[idx] = {
-        ...library[idx],
-        title,
-        description,
-        authors,
-        favorite,
-        fileCover,
-        fileName,
-        fileBook
-      }
-  
-      res.json(library[idx])
-    } else {
+  try {
+    const book = await Books.findById(id).select('-__v')
+    
+    if (book === null) {    // если нет такого id
       res.status(404)
       res.json('404 | книга не найдена')
+      
+    } else {
+      res.json(book)
     }
-  })
-  
-router.delete('/books/:id', (req, res) => {
-  const {id} = req.params
-  const idx = library.findIndex(el => el.id === id)
-     
-  if(idx !== -1){
-    library.splice(idx, 1)
-    res.json('ok')
-  } else {
-    res.status(404)
-    res.json('404 | книга не найдена')
+  } catch (e) {
+    res.status(500).json(e)
   }
 })
 
-module.exports = {
-  router,
-  library,
-  Book
-}
+router.post('/', async (req, res) => {    // создание новой записи
+  const {title, description, authors, favorite, fileCover, fileName} = req.body
+
+  const newBook = new Books({
+    title, 
+    description,
+    authors,
+    favorite,
+    fileCover,
+    fileName,
+  })
+
+  try {
+    await newBook.save()       // сохранить новую запись в базу
+    res.json(newBook)
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
+router.put('/:id', async (req, res) => {    // обновление записи
+  const {title, description, authors, favorite, fileCover, fileName} = req.body
+  const {id} = req.params
+
+  try {
+    await Books.findByIdAndUpdate(id, {title, description, authors, favorite, fileCover, fileName})
+    res.redirect(`/api/books/${id}`)
+  } catch (e) {
+    res.status(500).json(e)
+  }  
+})
+  
+router.delete('/:id', async (req, res) => {   // удаление записи
+  const {id} = req.params
+    
+  try {
+    await Books.deleteOne({_id: id})     // фильтр для удаления
+    res.json('ok')
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
+module.exports = router

@@ -1,7 +1,7 @@
 {
-  "name": "api-crud",
+  "name": "mongo-books",
   "version": "1.0.0",
-  "description": "2.1. Express",
+  "description": "2.7. Подключение MongoDB в Node.js приложение",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1",
-    "uuid": "^9.0.1"
+    "mongoose": "^8.4.0"
   }
 }
