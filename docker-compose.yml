@@ -30,6 +30,6 @@ services:
       - 80:3000
     environment:
       UrlDB: mongodb://root:example@mongo:27017/
-    command: npm start
+    command: npm run dev
     depends_on:
       - mongo

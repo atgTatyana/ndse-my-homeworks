@@ -1,16 +1,24 @@
 {
-  "name": "mongo-books",
+  "name": "auth-books",
   "version": "1.0.0",
-  "description": "2.7. Подключение MongoDB в Node.js приложение",
+  "description": "2.8 Аутентификация. Passport.js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon -L"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "mongoose": "^8.4.0"
+    "express-session": "^1.18.0",
+    "mongoose": "^8.4.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.1"
   }
 }

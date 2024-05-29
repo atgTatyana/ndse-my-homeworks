@@ -3,7 +3,6 @@ const Books = require('../models/books')
 
 const router = express.Router()
 
-
 router.get('/', async (req, res) => {     // получить все записи
   try {
     const books = await Books.find().select('-__v')
