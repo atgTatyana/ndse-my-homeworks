@@ -1,0 +1,75 @@
+<%- include('../port/layout-start', {title: title}) %>
+<%- include('../port/menu') %>
+
+<h1><%= title %></h1> 
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card">
+      <div class="card-body">
+                
+        <h5 class="card-title"><%= book.title %> Просмотры: <%= book.counter %></h5>
+        <p class="card-text"><%= book.description %></p>
+        <p class="card-text"><%= book.authors %></p>
+        <p class="card-text"><%= book.favorite %></p>
+        <p class="card-text"><%= book.fileCover %></p>
+        <p class="card-text"><%= book.fileName %></p>
+
+        <div class="text-right">
+          <a class="btn btn-sm btn-primary" href="/books/update/<%= book.id %>">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </a>
+          <form action="/books/delete/<%= book.id %>" method="POST" class="d-inline">
+            <button class="btn btn-sm btn-danger">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h6>Комментарии:</h6>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="user" autocomplete="off" value="<%= user.username %>" />
+    <input id="input" autocomplete="off" placeholder="Ваш комментарий" />
+    <button>Send</button>
+  </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  const roomName = location.pathname.split('/').pop()
+  const socket = io.connect('/', {query: `roomName=${roomName}`})
+
+  const form = document.getElementById('form')
+  const input = document.getElementById('input')
+  const user = document.getElementById('user')
+  const messages = document.getElementById('messages')
+    
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if (input.value) {
+      socket.emit('message-to-room', {
+        username: user.value,
+        message: input.value,
+      })
+      input.value = ''
+    }
+  })
+
+  socket.on('message-to-room', (msg) => {
+    const item = document.createElement('li')
+    item.textContent = msg.username + ': ' + msg.message
+    messages.appendChild(item)
+    window.scrollTo(0, document.body.scrollHeight)
+  })
+  
+</script>
+
+<%- include('../port/layout-end') %>

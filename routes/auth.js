@@ -4,7 +4,7 @@ const router = express.Router()
 module.exports = function(passport) {
   
   router.get('/', (req, res) => {    // домашняя страница
-    res.render('home', { user: req.user })
+    res.redirect('/')
   })
   
   router.get('/login', (req, res) => {   // выводит форму авторизации
@@ -15,14 +15,14 @@ module.exports = function(passport) {
     passport.authenticate('local', { failureRedirect: '/api/user/login' }),
     (req, res) => {    // если пользователь успешно авторизован
       console.log("req.user: ", req.user)
-      res.redirect('/api/user')
+      res.redirect('/')
     }
   )
 
   router.get('/logout', (req, res) => {
     req.logout(req.user, err => {
       if(err) return next(err)
-      res.redirect('/api/user')
+      res.redirect('/')
     })
   })
 
@@ -47,7 +47,7 @@ module.exports = function(passport) {
     { failureRedirect: '/api/user/signup' }),
     (req, res) => {
       console.log("req.user: ", req.user)
-      res.redirect('/api/user')
+      res.redirect('/')
     }
   )
 

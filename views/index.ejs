@@ -1,3 +1,13 @@
+<!-- вставка кода ejs, include(путь) -->
+<%- include('./port/layout-start', {title: title}) %>
+<%- include('./port/menu') %>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4"><%= title %></h1>
+    </div>
+</div>
+
 <% if (!user) { %>
     <p>Главная</p> 
     <p>
@@ -7,4 +17,7 @@
 <% } else { %>
     <p>Привет, <%= user.username %>. </p>
     <p>Перейти в <a href="/api/user/me">профиль</a>.</p>
+    <%- include('./books/books') %>
 <% } %>
+
+<%- include('./port/layout-end') %>
